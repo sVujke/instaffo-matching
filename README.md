@@ -6,50 +6,54 @@ ML Case Study
 
 ## 📁 Project Organization
 
+The <- points to the important files 
+
     ├── LICENSE
     ├── Makefile           <- Makefile with commands like `make data` or `make train`
-    ├── README.md          <- The top-level README for developers using this project.
+    ├── README.md         
     ├── data
-    │   ├── external       <- Data from third party sources.
+    │   ├── external       
     │   ├── interim        <- Intermediate data that has been transformed.
     │   ├── processed      <- The final, canonical data sets for modeling.
     │   └── raw            <- The original, immutable data dump.
     │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
+    ├── docs               
     │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
+    ├── models             <- serialized model
     │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
+    ├── notebooks         
     │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
+    ├── references        
     │
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
+    ├── reports            
+    │   └── figures         
     │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
+    ├── requirements.txt   <- dependecies
     │
     ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
     ├── src                <- Source code for use in this project.
     │   ├── __init__.py    <- Makes src a Python module
     │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
+    │   ├── data            
+    │   │   └── make_dataset.py    <- we convert the json to tabular data
     │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
+    │   ├── features    
+    |   │   └── build_features.py  <- here we create features for modeling   
+    │   │   └── feature_util.py    <- helper functions and global variables
+    │   ├── models         
+    │   │   │                 
+    │   │   └── train_model.py     <- Trains the model
+    |   |
+    │   ├── util         
+    │   │   │                 
+    │   │   └── logger.py  
+    |   │   └── paths.py
     │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
+    │   └── app  
+    │       └── search.py          <- key matching functions
+    |       └── ui.py              <- try out the matching functions 
     │
-    └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
+    └── tox.ini            
 
 
 --------
