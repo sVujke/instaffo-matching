@@ -1,30 +1,35 @@
-# -*- coding: utf-8 -*-
-import click
-import logging
-from pathlib import Path
-from dotenv import find_dotenv, load_dotenv
+import pandas as pd
+from src.util.logger import logger
+from src.util.paths import Paths
 
 
-@click.command()
-@click.argument('input_filepath', type=click.Path(exists=True))
-@click.argument('output_filepath', type=click.Path())
-def main(input_filepath, output_filepath):
-    """ Runs data processing scripts to turn raw data from (../raw) into
-        cleaned data ready to be analyzed (saved in ../processed).
+def normalize_and_merge(df_talent: pd.DataFrame, df_job: pd.DataFrame) -> pd.DataFrame:
     """
-    logger = logging.getLogger(__name__)
-    logger.info('making final data set from raw data')
+    Merges the talent and job dataframes into a single dataframe.
+    """
+    df_talent = pd.json_normalize(df_talent).add_prefix("talent_")
+    df_job = pd.json_normalize(df_job).add_prefix("job_")
+    df_merged = df_talent.merge(df_job, left_index=True, right_index=True)
+    return df_merged
 
 
-if __name__ == '__main__':
-    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=log_fmt)
+if __name__ == "__main__":
 
-    # not used in this stub but often useful for finding various files
-    project_dir = Path(__file__).resolve().parents[2]
+    logger.info(
+        "Normalizing json dictionaries and merging them into a single dataframe."
+    )
 
-    # find .env automagically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
+    df = pd.read_json(Paths.raw_dataset_path)
 
-    main()
+    logger.info(f"data shape: {df.shape}")
+
+    df_merged = normalize_and_merge(df.talent, df.job)
+    print(df_merged.head(5).T)
+    df = df.merge(df_merged, left_index=True, right_index=True)
+
+    df.to_pickle(Paths.interim_dataset_path)
+
+    logger.info(f"data shape: {df.shape}")
+    logger.info(f"data shape: {df.info()}")
+
+    logger.info("dataset created!")

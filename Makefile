@@ -54,6 +54,49 @@ else
 	aws s3 sync s3://$(BUCKET)/data/ data/ --profile $(PROFILE)
 endif
 
+## Create an IPython kernel for the virtual environment
+create_kernel:
+	@$(PYTHON_INTERPRETER) -m pip install ipykernel
+	@$(PYTHON_INTERPRETER) -m ipykernel install --user --name=$(PROJECT_NAME) --display-name="Python ($(PROJECT_NAME))"
+	@echo "IPython kernel named '$(PROJECT_NAME)' created. It can be selected in Jupyter interfaces."
+
+
+.PHONY: all data features model run pipeline
+
+# Variables
+DOCKER_IMAGE_NAME=my_ml_pipeline
+DATA_OUTPUT_DIR=./data/processed
+FEATURES_OUTPUT_DIR=./features
+MODEL_OUTPUT_DIR=./models
+
+all: pipeline run
+
+## Make Dataset
+data: requirements
+	$(PYTHON_INTERPRETER) src/data/make_dataset.py
+
+## Build Features
+features: requirements
+	$(PYTHON_INTERPRETER) src/features/build_features.py
+
+## Train Model
+model: requirements
+	$(PYTHON_INTERPRETER) src/models/train_model.py
+
+## Run the entire pipeline
+pipeline: data features model
+
+## Run the Streamlit app
+run: 
+ifeq (True,$(HAS_CONDA))
+	@echo ">>> Activating conda environment and running Streamlit"
+	@bash -c "source activate $(PROJECT_NAME) && streamlit run src/app/ui.py"
+else
+	@echo ">>> Activating virtualenv and running Streamlit"
+	@bash -c "source venv/bin/activate && streamlit run src/app/ui.py"
+endif
+
+
 ## Set up python interpreter environment
 create_environment:
 ifeq (True,$(HAS_CONDA))
@@ -70,6 +113,7 @@ else
 	export WORKON_HOME=$$HOME/.virtualenvs\nexport PROJECT_HOME=$$HOME/Devel\nsource /usr/local/bin/virtualenvwrapper.sh\n"
 	@bash -c "source `which virtualenvwrapper.sh`;mkvirtualenv $(PROJECT_NAME) --python=$(PYTHON_INTERPRETER)"
 	@echo ">>> New virtualenv created. Activate with:\nworkon $(PROJECT_NAME)"
+	@$(MAKE) create_kernel
 endif
 
 ## Test python environment is setup correctly
