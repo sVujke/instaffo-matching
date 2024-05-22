@@ -71,7 +71,7 @@ git clone https://github.com/yourusername/instaffo-matching.git
 cd instaffo-matching
 ```
 
-2. Set up the environment
+### 2. Set up the environment
 Create and activate a Conda or virtual environment:
 
 Using Conda
@@ -86,11 +86,19 @@ Using Conda
 conda activate instaffo-matching
 ```
 
-3. Install dependencies
+### 3. Install dependencies
 Install the required Python packages:
 
 ```sh
 make requirements
+```
+
+### Add .env file
+
+All you need to add to the file: 
+
+```sh
+WORKING_DIR="<local_path>/instaffo-matching"
 ```
 
 ## 🔄 Running the Pipeline
