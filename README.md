@@ -93,7 +93,7 @@ Install the required Python packages:
 make requirements
 ```
 
-### Add .env file
+### 4. Add `.env` file
 
 All you need to add to the file: 
 
